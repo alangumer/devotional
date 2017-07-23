@@ -133,7 +133,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             timeAgo: this._timeAgo(new Date(item.time).getTime()),
             author: item.author,
             summary: item.summary ? this._trimRight(item.summary, 100) : '',
-            readTime: Math.max(2, Math.round(item.contentLength / 3000)) + ' min read'
+            readTime: Math.max(2, Math.round(item.contentLength / 3000)) + ' min read',
+            mediaUrl: item.mediaUrl
           });
         }
 

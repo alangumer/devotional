@@ -13,6 +13,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 <link rel="import" href="../bower_components/app-route/app-location.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
 <link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/paper-audio-player/paper-audio-player.html">
 
 <link rel="import" href="devotional-data.html">
 <link rel="import" href="devotional-nav.html">
@@ -56,11 +57,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       }
 
       footer {
-        position: absolute;
+        /*position: absolute;*/
+        position: fixed;
+        background-color: #fff;
+        z-index: 10;
         bottom: 0;
         right: 0;
         left: 0;
-        padding-bottom: 24px;
+        /*padding-bottom: 24px;*/
         text-align: center;
       }
 
@@ -147,7 +151,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </iron-pages>
 
     <footer>
-      <a href="#">Devotional</a>
+      <paper-audio-player id="audioPlayer" preload="none" title="" color="#F05C38"></paper-audio-player>
+      <!-- <a href="#">Devotional</a> -->
     </footer>
 
   </template>
@@ -197,7 +202,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       observers: [
         '_routePageChanged(routeData.page)',
         '_updateArticleHeadline(article.headline)',
-        '_updateDocumentTitle(page, category.title, articleHeadline, appTitle)'
+        '_updateDocumentTitle(page, category.title, articleHeadline, appTitle)',
+        '_updateAudioPlayer(article)',
       ],
 
       listeners: {
@@ -315,6 +321,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       // Response by a11y announcing the section and syncronizing the category.
       _updateDocumentTitle: function(page, categoryTitle, articleHeadline, appTitle) {
         document.title = (page === 'list' ? categoryTitle : articleHeadline) + ' - ' + appTitle;
+      },
+
+      _updateAudioPlayer: function(article) {
+        console.log('updating audio player', article, this.$.audioPlayer);
+        this.$.audioPlayer.src = article.mediaUrl;
       },
 
       _refreshData: function() {
