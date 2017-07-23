@@ -1,0 +1,43 @@
+{
+  "entrypoint": "index.html",
+  "shell": "src/devotional-app.html",
+  "fragments": [
+    "src/devotional-list.html",
+    "src/devotional-article.html",
+    "src/devotional-path-warning.html",
+    "src/lazy-resources.html"
+  ],
+  "sources": [
+    "src/**/*",
+    "images/**/*",
+    "data/**/*",
+    "bower.json"
+  ],
+  "extraDependencies": [
+    "app.yaml",
+    "main.py",
+    "manifest.json",
+    "bower_components/webcomponentsjs/webcomponents-lite.min.js"
+  ],
+  "builds": [{
+    "name": "es5-bundled",
+    "bundle": true,
+    "js": {"minify": true, "compile": true},
+    "css": {"minify": true},
+    "html": {"minify": true},
+    "addServiceWorker": true
+  },{
+    "name": "bundled",
+    "bundle": true,
+    "js": {"minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true},
+    "addServiceWorker": true
+  },{
+    "name": "unbundled",
+    "js": {"minify": true},
+    "css": {"minify": true},
+    "html": {"minify": true},
+    "addServiceWorker": true
+  }]
+}
