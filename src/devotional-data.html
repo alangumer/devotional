@@ -134,7 +134,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             author: item.author,
             summary: item.summary ? this._trimRight(item.summary, 100) : '',
             readTime: Math.max(2, Math.round(item.contentLength / 3000)) + ' min read',
-            mediaUrl: item.mediaUrl
+            mediaUrl: item.mediaUrl,
+            date: this._formatDate(item.month, item.day)
           });
         }
 
@@ -173,6 +174,19 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           return '1 day ago';
 
         return Math.floor(hours / 24) + ' days ago';
+      },
+
+      _formatDate: function(month, day) {
+        var monthNames = [
+          'January', 'February', 'March',
+          'April', 'May', 'June', 'July',
+          'August', 'September', 'October',
+          'November', 'December'
+        ];
+
+        var date = new Date( new Date().getFullYear(), month - 1, day);
+
+        return monthNames[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
       },
 
       _trimRight: function(text, maxLength) {
