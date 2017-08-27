@@ -10,11 +10,11 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
 <link rel="import" href="../bower_components/polymer/polymer.html">
 <link rel="import" href="../bower_components/app-route/app-route.html">
-<link rel="import" href="../bower_components/iron-icon/iron-icon.html">
+<!-- <link rel="import" href="../bower_components/iron-icon/iron-icon.html"> -->
 
 <link rel="import" href="devotional-article-cover.html">
 <!-- <link rel="import" href="devotional-iframe.html"> -->
-<link rel="import" href="devotional-side-list.html">
+<!-- <link rel="import" href="devotional-side-list.html"> -->
 
 <dom-module id="devotional-article">
 
@@ -80,16 +80,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         width: 300px;
       }
 
-      devotional-side-list {
+      /*devotional-side-list {
         margin-bottom: 32px;
-      }
+      }*/
 
       /*devotional-iframe {
         width: 300px;
         height: 250px;
       }*/
 
-      .share-link {
+      /*.share-link {
         display: inline-block;
         margin-right: 24px;
         margin-bottom: 24px;
@@ -101,7 +101,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       .share-link iron-icon {
         margin-right: 8px;
-      }
+      }*/
 
       .ad-container {
         display: flex;
@@ -133,9 +133,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           padding: 0 24px;
         }
 
-        .share-link {
+        /*.share-link {
           display: none;
-        }
+        }*/
       }
 
       /* mobile and desktop small */
@@ -175,18 +175,18 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         <!-- <div class="ad-container">
           <devotional-iframe src="//rcm-na.amazon-adsystem.com/e/cm?o=1&p=12&l=ur1&f=ifr"></devotional-iframe>
         </div> -->
-        <a href="#" class="share-link" aria-label="Send by email">
+        <!-- <a href="#" class="share-link" aria-label="Send by email">
           <iron-icon icon="mail"></iron-icon> Email
         </a>
         <a href="#" class="share-link" aria-label="Share on social networks">
           <iron-icon icon="share"></iron-icon> Share
-        </a>
-        <devotional-side-list class="fade-in" items="[[_slice(category.items, 0, 3)]]">
+        </a> -->
+        <!-- <devotional-side-list class="fade-in" items="[[_slice(category.items, 0, 3)]]">
           Most Read
         </devotional-side-list>
         <devotional-side-list class="fade-in" featured items="[[_slice(category.items, 3, 9)]]">
           Top Stories
-        </devotional-side-list>
+        </devotional-side-list> -->
       </aside>
     </div>
 
