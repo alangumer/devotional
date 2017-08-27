@@ -78,6 +78,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         text-decoration: underline;
       }
 
+      #audioPlayer {
+        width: 100%;
+      }
+
       /* desktop */
       @media (min-width: 768px) {
         :host {
@@ -152,7 +156,8 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     </iron-pages>
 
     <footer>
-      <paper-audio-player id="audioPlayer" preload="none" title="" color="#F05C38"></paper-audio-player>
+      <!-- Audio HTML5 element -->
+      <audio id="audioPlayer" controls></audio>
       <!-- <a href="#">Devotional</a> -->
     </footer>
 
