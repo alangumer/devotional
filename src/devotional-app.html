@@ -249,13 +249,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged: function(page) {
         if (!page) {
 
-          this.$.data._fetch('/data/reflecting_Christ.json',
+          this.$.data._fetch('/data/Reflecting Christ.json',
             function(response) {
               for (var i = 0; i < response.length; ++i) {
                 var article = response[i];
                 var date = new Date();
                 if (article.month === date.getMonth() + 1 && article.day === date.getDate()) {
-                  this.set('route.path', article.id ? '/article/reflecting_Christ/' + article.id : null);
+                  this.set('route.path', article.id ? '/article/Reflecting Christ/' + article.id : null);
                   return;
                 }
               }
@@ -264,7 +264,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             1 /* attempts */);
 
           // set default route if route path is empty
-          // this.set('route.path', 'list/reflecting_Christ');
+          // this.set('route.path', 'list/Reflecting Christ');
           // return;
         }
         this.page = page;
