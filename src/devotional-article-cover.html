@@ -70,6 +70,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         min-height: calc(var(--viewport-height) * 0.6);
       }
 
+      .timer-icon {
+        margin-left: 30px;
+      }
+
       /* mobile */
       @media (max-width: 767px) {
         :host {
@@ -143,7 +147,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       </div>
       <h1>[[article.headline]]</h1>
       <div class="meta">
-        <span>[[article.timeAgo]]</span>
+        <span>[[article.date]]</span>
         <iron-icon class="timer-icon" icon="timer"></iron-icon>
         <span>[[article.readTime]]</span>
       </div>

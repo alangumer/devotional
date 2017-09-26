@@ -171,7 +171,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
         :host([page=article]) header .logo,
         :host([page=article]) header .date-line {
-          /*visibility: hidden;*/
+          visibility: hidden;
         }
 
         .sticky-nav .logo,
@@ -280,7 +280,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         </div>
       </app-toolbar>
       <div class="date-line" role="heading">
-        [[category.title]] <span aria-hidden="true">&nbsp;&middot;&nbsp;</span> [[article.date]]
+        [[category.title]] <span aria-hidden="true">&nbsp;&middot;&nbsp;</span> [[_currentTime()]]
       </div>
       <template is="dom-if" if="[[!smallScreen]]">
         <iron-selector role="navigation" class="menu-list" selected="[[category.name]]"
@@ -345,8 +345,6 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         categories: Array,
 
         category: Object,
-
-        article: Object,
 
         smallScreen: Boolean,
 
