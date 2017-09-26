@@ -360,8 +360,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _updateAudioPlayer: function(article) {
-        console.log('updating audio player', article, this.$.audioPlayer);
-        this.$.audioPlayer.src = article.mediaUrl;
+        this.$.audioPlayer.src = article ? article.mediaUrl : null;
       },
 
       _refreshData: function() {
