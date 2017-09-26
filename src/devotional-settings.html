@@ -1,0 +1,209 @@
+<!--
+@license
+Copyright (c) 2016 The Polymer Project Authors. All rights reserved.
+This code may only be used under the BSD style license found at http://polymer.github.io/LICENSE.txt
+The complete set of authors may be found at http://polymer.github.io/AUTHORS.txt
+The complete set of contributors may be found at http://polymer.github.io/CONTRIBUTORS.txt
+Code distributed by Google as part of the polymer project is also
+subject to an additional IP rights grant found at http://polymer.github.io/PATENTS.txt
+-->
+
+<link rel="import" href="../bower_components/polymer/polymer.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-dropdown-menu/paper-dropdown-menu.html">
+<link rel="import" href="../bower_components/paper-time-input/paper-time-input.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+
+<dom-module id="devotional-settings">
+
+  <template>
+
+    <style>
+
+      :host {
+        display: block;
+      }
+
+      [hidden] {
+        display: none !important;
+      }
+
+      .container .fade-in {
+        opacity: 0;
+      }
+
+      .container[fade-in] .fade-in {
+        opacity: 1;
+        transition: opacity 500ms;
+      }
+
+      .content {
+        @apply(--layout-flex);
+      }
+
+      #itemsList {
+        @apply --layout-flex;
+      }
+
+      /* mobile */
+      @media (max-width: 767px) {
+        aside {
+          display: none;
+        }
+
+        .form {
+          margin: 24px 24px 24px 24px
+        }
+
+        paper-dropdown-menu {
+          width: 100%;
+        }
+      }
+
+      /* desktop large */
+      @media (min-width: 1310px) {
+        .container {
+          @apply(--layout-horizontal);
+        }
+
+        .content {
+          margin-right: 24px;
+        }
+
+        aside {
+          width: 300px;
+          min-width: 300px;
+        }
+      }
+
+    </style>
+
+    <!--
+      app-route provides the name of the category.
+    -->
+    <app-route
+        route="[[route]]"
+        pattern=""
+        data="{{_routeData}}"></app-route>
+
+    <div class="container" fade-in$="[[!loading]]" hidden$="[[failure]]">
+      <div class="content">
+        <div class="form">
+          <paper-dropdown-menu label="Devotional" no-animations on-iron-select="_selectDevotional">
+            <paper-listbox slot="dropdown-content" id="categoryList">
+              <template is="dom-repeat" items="[[categories]]">
+                <paper-item>[[item.name]]</paper-item>
+              </template>
+            </paper-listbox>
+          </paper-dropdown-menu>
+
+          <div>
+            <h4>Daily Reminder</h4>
+            <paper-checkbox class="styled" checked="{{dailyReminder}}">
+              Check to enable Devotional reminder
+            </paper-checkbox>
+            <paper-time-input hour="6" min="00" am-pm="AM" title="Reminder Time" style="margin-top:20px" disabled="[[!dailyReminder]]"></paper-time-input>
+          </div>
+        </div>
+      </div>
+
+      <aside>
+
+      </aside>
+    </div>
+
+    <devotional-network-warning
+        hidden$="[[!failure]]"
+        offline="[[offline]]"
+        on-try-reconnect="_tryReconnect"></devotional-network-warning>
+
+  </template>
+
+  <script>
+
+    Polymer({
+
+      is: 'devotional-settings',
+
+      properties: {
+
+        route: Object,
+
+        categories: Array,
+
+        category: Object,
+
+        offline: Boolean,
+
+        failure: Boolean,
+
+        categoryName: {
+          type: Boolean,
+          computed: '_return(_routeData.category)',
+          notify: true
+        },
+
+        _routeData: Object,
+
+        dailyReminder: {
+          type: Boolean,
+          value: true
+        }
+
+      },
+
+      _boundResizeHandler: null,
+
+      attached: function() {
+        this._boundResizeHandler = this._resizeHandler.bind(this);
+        window.addEventListener('resize', this._boundResizeHandler);
+        console.log('categoryList', this.$.categoryList);
+        console.log('categories', this.categories);
+        for (var i = 0; i < this.categories.length; i++) {
+          if ( this.categories[i].name == window.localStorage.getItem('devotional') ) {
+            this.$.categoryList.selected = i;
+            return;
+          }
+          console.log('i', this.categories[i].name);
+        }
+      },
+
+      detached: function() {
+        window.removeEventListener('resize', this._boundResizeHandler);
+      },
+
+      _getFeaturedItem: function(items) {
+        return items ? items[0] : {};
+      },
+
+      _tryReconnect: function() {
+        this.fire('refresh-data');
+      },
+
+      _resizeHandler: function() {
+        this.debounce('_resize', this.updateStyles, 50);
+      },
+
+      _slice: function(list, begin, end) {
+        return list.slice(begin, end);
+      },
+
+      _return: function(value) {
+        // return value;
+        return "Maranatha";
+      },
+
+      _selectDevotional: function(e) {
+        var selectedItem = e.target.selectedItem;
+        if (selectedItem) {
+          window.localStorage.setItem('devotional', selectedItem.innerText);
+        }
+      }
+
+    });
+
+  </script>
+
+</dom-module>

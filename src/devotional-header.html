@@ -127,12 +127,37 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       /* mobile */
       @media (max-width: 767px) {
         header {
-          position: absolute;
+          /*position: absolute;*/
           top: 0;
           left: 0;
           right: 0;
           color: var(--app-cover-text-color);
         }
+
+        /* added for other pages that are not list and article like settings */
+        :host([page=list]) header,
+        :host([page=article]) header {
+          position: absolute;
+        }
+
+        .logo-toolbar {
+          background: var(--app-nav-background-color);
+        }
+
+        :host([page=list]) .logo-toolbar,
+        :host([page=article]) .logo-toolbar {
+          background: none;
+        }
+
+        header .date-line {
+          display: none;
+        }
+
+        :host([page=list]) header .date-line,
+        :host([page=article]) header .date-line {
+          display: block;
+        }
+        /* end for other pages */
 
         header .logo {
           margin-right: 40px;
@@ -260,6 +285,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <template is="dom-if" if="[[!smallScreen]]">
         <iron-selector role="navigation" class="menu-list" selected="[[category.name]]"
             attr-for-selected="name">
+          <a name="settings" href="/settings">Settings</a>
           <template is="dom-repeat" items="[[categories]]" as="category" initial-count="9">
             <a name="[[category.name]]" href="/list/[[category.name]]">[[category.title]]</a>
           </template>
@@ -291,6 +317,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       <div class="sticky-nav-menu" shown$="[[drawerOpened]]">
         <iron-selector class="grid-container" role="navigation"
             selected="[[category.name]]" attr-for-selected="name">
+          <a name="settings" href="/settings">Settings</a>
           <template is="dom-repeat" items="[[categories]]" as="category" initial-count="9">
             <a name="[[category.name]]" href="/list/[[category.name]]">[[category.title]]</a>
           </template>

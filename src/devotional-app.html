@@ -138,6 +138,17 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
           loading="[[loading]]"
           offline="[[offline]]"
           failure="[[failure]]"></devotional-list>
+      <!-- list view of articles in a category -->
+      <devotional-settings
+          id="settings"
+          name="settings"
+          route="[[subroute]]"
+          category-name="{{categoryName}}"
+          categories="[[categories]]"
+          category="[[category]]"
+          loading="[[loading]]"
+          offline="[[offline]]"
+          failure="[[failure]]"></devotional-settings>
       <!-- article view -->
       <devotional-article
           name="article"
@@ -249,13 +260,16 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       _routePageChanged: function(page) {
         if (!page) {
 
-          this.$.data._fetch('/data/Reflecting Christ.json',
+          var categoryName = window.localStorage.getItem('devotional');
+          categoryName = categoryName ? categoryName : 'Conflict and Courage';
+
+          this.$.data._fetch('/data/' + categoryName + '.json',
             function(response) {
               for (var i = 0; i < response.length; ++i) {
                 var article = response[i];
                 var date = new Date();
                 if (article.month === date.getMonth() + 1 && article.day === date.getDate()) {
-                  this.set('route.path', article.id ? '/article/Reflecting Christ/' + article.id : null);
+                  this.set('route.path', article.id ? '/article/' + categoryName + '/' + article.id : null);
                   return;
                 }
               }
@@ -281,6 +295,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         switch(page) {
           case 'list':
             href = 'devotional-list.html';
+          break;
+          case 'settings':
+            href = 'devotional-settings.html';
           break;
           case 'article':
             href = 'devotional-article.html';

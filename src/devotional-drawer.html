@@ -53,6 +53,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
     <app-drawer opened="{{drawerOpened}}" swipe-open tabindex="0">
       <paper-icon-button icon="close" on-click="_closeDrawer"></paper-icon-button>
       <iron-selector role="navigation" class="drawer-list" selected="[[category.name]]" attr-for-selected="name">
+        <a name="settings" href="/settings">Settings</a>
         <template is="dom-repeat" items="[[categories]]" as="category" initial-count="9">
           <a name="[[category.name]]" href="/list/[[category.name]]">[[category.title]]</a>
         </template>
