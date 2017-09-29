@@ -5,6 +5,7 @@
     "src/devotional-list.html",
     "src/devotional-article.html",
     "src/devotional-path-warning.html",
+    "src/devotional-settings.html",
     "src/lazy-resources.html"
   ],
   "sources": [
