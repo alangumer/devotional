@@ -104,7 +104,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             <paper-checkbox class="styled" checked="{{dailyReminder}}">
               Check to enable Devotional reminder
             </paper-checkbox>
-            <paper-time-input hour="6" min="00" am-pm="AM" title="Reminder Time" style="margin-top:20px" disabled="[[!dailyReminder]]"></paper-time-input>
+            <paper-time-input id="reminderTime" hour="[[hour]]" min="[[minutes]]" am-pm="[[amPm]]" title="Reminder Time" style="margin-top:20px" disabled="[[!dailyReminder]]" value="{{dailyReminderTime}}"></paper-time-input>
           </div>
         </div>
       </div>
@@ -150,6 +150,26 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         dailyReminder: {
           type: Boolean,
           value: true
+        },
+
+        hour: {
+          type: Number,
+          computed: '_returnReminderHour(dailyReminder)'
+        },
+
+        minutes: {
+          type: Number,
+          computed: '_returnReminderMinutes(dailyReminder)'
+        },
+
+        amPm: {
+          type: String,
+          computed: '_returnReminderAmPm(dailyReminder)'
+        },
+
+        dailyReminderTime: {
+          type: String,
+          observer: '_setDailyReminder'
         }
 
       },
@@ -159,14 +179,13 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       attached: function() {
         this._boundResizeHandler = this._resizeHandler.bind(this);
         window.addEventListener('resize', this._boundResizeHandler);
-        console.log('categoryList', this.$.categoryList);
-        console.log('categories', this.categories);
+
+        // set default category
         for (var i = 0; i < this.categories.length; i++) {
           if ( this.categories[i].name == window.localStorage.getItem('devotional') ) {
             this.$.categoryList.selected = i;
             return;
           }
-          console.log('i', this.categories[i].name);
         }
       },
 
@@ -195,10 +214,58 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         return "Maranatha";
       },
 
+      _returnReminderHour: function() {
+        if ( window.localStorage.getItem('reminderTime') ) {
+          var date = new Date();
+          date.setTime(window.localStorage.getItem('reminderTime'));
+          console.log('date.getHours()', date.getHours());
+          return date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        }
+      },
+
+      _returnReminderMinutes: function() {
+        if ( window.localStorage.getItem('reminderTime') ) {
+          var date = new Date();
+          date.setTime(window.localStorage.getItem('reminderTime'));
+          console.log('get minutes', date.getMinutes());
+          return date.getMinutes();
+        }
+      },
+
+      _returnReminderAmPm: function() {
+        if ( window.localStorage.getItem('reminderTime') ) {
+          var date = new Date();
+          date.setTime(window.localStorage.getItem('reminderTime'));
+          console.log('am pm', date.getHours(), date.getHours() > 12);
+          return date.getHours() > 12 ? 'PM' : 'AM';
+        }
+      },
+
       _selectDevotional: function(e) {
         var selectedItem = e.target.selectedItem;
         if (selectedItem) {
           window.localStorage.setItem('devotional', selectedItem.innerText);
+        }
+      },
+
+      _setDailyReminder: function(newValue, oldValue) {
+        console.log('_setDailyReminder', newValue, oldValue);
+        if ( newValue == undefined || oldValue == undefined ) return;
+        var arrayDate = newValue.split(/[:\s]+/);
+        var date = new Date();
+        date.setHours(arrayDate[2] == 'AM' ? arrayDate[0] : parseInt(arrayDate[0]) + 12);
+        date.setMinutes(arrayDate[1]);
+        date.setSeconds(00);
+        console.log('date', date);
+        window.localStorage.setItem('reminderTime', date.getTime())
+        if ( typeof cordova !== 'undefined' ) {
+          cordova.plugins.notification.local.clearAll();
+          cordova.plugins.notification.local.schedule({
+            title: 'Devotional time!',
+            text: 'Tap to read your devotional.',
+            every: 'day',
+            at: date
+          });
         }
       }
 
