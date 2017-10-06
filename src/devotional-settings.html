@@ -101,10 +101,10 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
           <div>
             <h4>Daily Reminder</h4>
-            <paper-checkbox class="styled" checked="{{dailyReminder}}">
+            <paper-checkbox class="styled" checked="{{dailyReminder}}" on-change="_toggleReminder">
               Check to enable Devotional reminder
             </paper-checkbox>
-            <paper-time-input id="reminderTime" hour="[[hour]]" min="[[minutes]]" am-pm="[[amPm]]" title="Reminder Time" style="margin-top:20px" disabled="[[!dailyReminder]]" value="{{dailyReminderTime}}"></paper-time-input>
+            <paper-time-input id="reminderTime" hour="{{hour}}" min="{{minutes}}" am-pm="{{amPm}}" title="Reminder Time" style="margin-top:20px" disabled="[[!dailyReminder]]" value="{{dailyReminderTime}}"></paper-time-input>
           </div>
         </div>
       </div>
@@ -148,28 +148,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         _routeData: Object,
 
         dailyReminder: {
-          type: Boolean,
-          value: true
+          type: Boolean
         },
 
         hour: {
-          type: Number,
-          computed: '_returnReminderHour(dailyReminder)'
+          type: Number
         },
 
         minutes: {
-          type: Number,
-          computed: '_returnReminderMinutes(dailyReminder)'
+          type: Number
         },
 
         amPm: {
-          type: String,
-          computed: '_returnReminderAmPm(dailyReminder)'
+          type: String
         },
 
         dailyReminderTime: {
           type: String,
-          observer: '_setDailyReminder'
+          observer: '_dailyReminderTimeObserver'
         }
 
       },
@@ -184,9 +180,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         for (var i = 0; i < this.categories.length; i++) {
           if ( this.categories[i].name == window.localStorage.getItem('devotional') ) {
             this.$.categoryList.selected = i;
-            return;
           }
         }
+
+        var localStorageReminderTime = window.localStorage.getItem('reminderTime');
+        if ( localStorageReminderTime ) {
+          var date = new Date();
+          date.setTime(localStorageReminderTime);
+
+          // set amPm, minutes, and hour
+          this.amPm = date.getHours() > 12 ? 'PM' : 'AM';
+          this.minutes = date.getMinutes();
+          // when the hour is changed the _dailyReminderTimeObserver is triggered so amPm and minutes needs to be already setted
+          this.hour = date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
+        }
+
+        // set dailyReminder
+        var localStorageReminderTimeEnabled = window.localStorage.getItem('reminderTimeEnabled');
+        this.dailyReminder = localStorageReminderTimeEnabled && localStorageReminderTimeEnabled !== 'false' ? true : false;
       },
 
       detached: function() {
@@ -211,34 +222,7 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
 
       _return: function(value) {
         // return value;
-        return "Maranatha";
-      },
-
-      _returnReminderHour: function() {
-        if ( window.localStorage.getItem('reminderTime') ) {
-          var date = new Date();
-          date.setTime(window.localStorage.getItem('reminderTime'));
-          console.log('date.getHours()', date.getHours());
-          return date.getHours() > 12 ? date.getHours() - 12 : date.getHours();
-        }
-      },
-
-      _returnReminderMinutes: function() {
-        if ( window.localStorage.getItem('reminderTime') ) {
-          var date = new Date();
-          date.setTime(window.localStorage.getItem('reminderTime'));
-          console.log('get minutes', date.getMinutes());
-          return date.getMinutes();
-        }
-      },
-
-      _returnReminderAmPm: function() {
-        if ( window.localStorage.getItem('reminderTime') ) {
-          var date = new Date();
-          date.setTime(window.localStorage.getItem('reminderTime'));
-          console.log('am pm', date.getHours(), date.getHours() > 12);
-          return date.getHours() > 12 ? 'PM' : 'AM';
-        }
+        return "Settings";
       },
 
       _selectDevotional: function(e) {
@@ -248,16 +232,24 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
         }
       },
 
-      _setDailyReminder: function(newValue, oldValue) {
-        console.log('_setDailyReminder', newValue, oldValue);
-        if ( newValue == undefined || oldValue == undefined ) return;
+      _toggleReminder: function(e) {
+        window.localStorage.setItem('reminderTimeEnabled', this.dailyReminder);
+
+        if ( this.dailyReminderTime ) {
+          this._dailyReminderTimeObserver(this.dailyReminderTime);
+        }
+      },
+
+      _dailyReminderTimeObserver: function(newValue, oldValue) {
+        console.log('_dailyReminderTimeObserver', newValue, oldValue);
+        if ( newValue == undefined ) return;
         var arrayDate = newValue.split(/[:\s]+/);
         var date = new Date();
         date.setHours(arrayDate[2] == 'AM' ? arrayDate[0] : parseInt(arrayDate[0]) + 12);
         date.setMinutes(arrayDate[1]);
         date.setSeconds(00);
         console.log('date', date);
-        window.localStorage.setItem('reminderTime', date.getTime())
+        window.localStorage.setItem('reminderTime', date.getTime());
         if ( typeof cordova !== 'undefined' ) {
           cordova.plugins.notification.local.clearAll();
           cordova.plugins.notification.local.schedule({
