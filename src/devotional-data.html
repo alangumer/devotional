@@ -143,7 +143,9 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
             summary: item.summary ? this._trimRight(item.summary, 100) : '',
             readTime: Math.max(2, Math.round(item.contentLength / 3000)) + ' min read',
             mediaUrl: item.mediaUrl,
-            date: this._formatDate(item.month, item.day)
+            date: this._formatDate(item.month, item.day),
+            month: item.month,
+            day: item.day
           });
         }
 

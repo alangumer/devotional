@@ -168,7 +168,14 @@ subject to an additional IP rights grant found at http://polymer.github.io/PATEN
       },
 
       _getFeaturedItem: function(items) {
-        return items ? items[0] : {};
+        if (!items) return {};
+
+        for (var i = 0, item; item = items[i]; ++i) {
+          var date = new Date();
+          if (item.month === date.getMonth() + 1 && item.day === date.getDate()) {
+            return item;
+          }
+        }
       },
 
       _tryReconnect: function() {
